@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Common_activity_ActivityDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityDTO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="tp" property="tp" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="stime" property="stime" jdbcType="VARCHAR" />
+		<result column="etime" property="etime" jdbcType="VARCHAR" />
+		<result column="overtime" property="overtime" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="VARCHAR" />
+		<result column="latitude" property="latitude" jdbcType="VARCHAR" />
+		<result column="enternum" property="enternum" jdbcType="INTEGER" />
+		<result column="praisenum" property="praisenum" jdbcType="INTEGER" />
+		<result column="verifystatus" property="verifystatus" jdbcType="VARCHAR" />
+		<result column="verifytorid" property="verifytorid" jdbcType="VARCHAR" />
+		<result column="verifytor" property="verifytor" jdbcType="VARCHAR" />
+		<result column="dateverify" property="dateverify" jdbcType="VARCHAR" />
+		<result column="verifydesc" property="verifydesc" jdbcType="VARCHAR" />
+		<result column="activiissueid" property="activiissueid" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+		
+		<result column="firstpic" property="firstpic" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, hxuuid, tp,  title, content, stime, etime, overtime, address, contact, tel, longitude, latitude, 
+		enternum, praisenum, verifystatus, verifytorid, verifytor, dateverify, verifydesc, activiissueid, 
+		date_created
+	</sql>
+	
+	
+	<!-- 查询活动列表（分页） -->
+	<select id="queryActivityPage" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="BaseResultMap">
+		SELECT a.*
+			FROM common_activity a
+		<where>
+			a.data_state = 'Y'
+			<if test="t.tp != null and t.tp != '' "><!-- 类型不为空 -->
+					AND a.tp = #{t.tp,jdbcType=VARCHAR} 
+					AND a.verifystatus='1'
+			</if>
+			<if test="t.title != null and t.title != '' ">
+				AND INSTR(a.title, #{t.title,jdbcType=VARCHAR} ) > 0
+			</if>
+			<if test="t.activiissueid != null and t.activiissueid != '' ">
+				AND a.activiissueid = #{t.activiissueid,jdbcType=VARCHAR} 
+			</if>
+		</where>
+		<if test="sort != null and sort != '' ">
+			ORDER BY ${sort}
+			<if test="order == 'desc' or order == 'DESC' ">
+				DESC
+			</if>
+		</if>
+			LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+			
+		<!-- //我的审核
+		if ( TextUtils.notEmpty(activityDTO.getVerifystatus()) ) { //我的审核
+			String verifystatus = activityDTO.getVerifystatus();
+			if("0".equals(verifystatus)){
+				sql.append(" AND a.verifystatus ='0' ");
+				sql.append(" GROUP BY a.activityid ORDER BY a.date_created ASC ");//待审核升序排列
+			} else {
+				sql.append(" AND a.verifystatus !='0' ");
+				if (TextUtils.notEmpty(activityDTO.getVerifytorid())) {
+					sql.append(" AND a.verifytorid = :verifytorid ");
+					map.put("verifytorid", activityDTO.getVerifytorid());
+				}
+				sql.append(" GROUP BY a.activityid ORDER BY a.date_created DESC ");//已审核倒序排列
+			}
+		} else {
+			sql.append(" GROUP BY a.activityid ORDER BY a.date_created DESC ");
+		} -->
+	</select>
+	
+	<!-- 查询活动列表总记录 -->
+	<select id="getActivityCount" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityDTO" resultType="INTEGER">
+		SELECT COUNT(1) FROM common_activity a
+		<where>
+			a.data_state = 'Y'
+			<if test="title != null and title != '' ">
+				AND INSTR(a.title, title) > 0
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询活动列表（分页） -->
+	<select id="queryActivityForPage" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="BaseResultMap">
+		SELECT a.*,CONCAT(b.attach_path,'/',b.attach_name,b.attach_type) as firstpic 
+			FROM common_activity a LEFT JOIN sys_attach b ON a.hxuuid=b.attachfk_id AND b.attach_mod='31'
+			LEFT JOIN common_activity_enter e ON a.hxuuid=e.activityid 
+		<where>
+			a.data_state = 'Y'
+			<if test="t.tp != null and t.tp != '' "><!-- 类型不为空 -->
+					AND a.tp = #{t.tp,jdbcType=VARCHAR} 
+			</if>
+			<if test="t.title != null and t.title != '' ">
+				AND INSTR(a.title, #{t.title,jdbcType=VARCHAR}) > 0
+			</if>
+			<if test="t.activiissueid != null and t.activiissueid != '' ">
+				AND a.activiissueid = #{t.activiissueid,jdbcType=VARCHAR} 
+			</if>
+			<!-- 审核状态 -->
+			<if test="t.verifystatus != null and t.verifystatus != '' ">
+				AND a.verifystatus = #{t.verifystatus,jdbcType=VARCHAR} 
+			</if>
+			<!-- 我的参与 -->
+			<if test="t.entertel != null and t.entertel != '' ">
+				AND e.entertel = #{t.entertel,jdbcType=VARCHAR} 
+			</if>
+		</where>
+		GROUP BY a.hxuuid  
+		<if test="sort != null and sort != '' ">
+			ORDER BY ${sort}
+			<if test="order == 'desc' or order == 'DESC' ">
+				DESC
+			</if>
+		</if>
+			LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+	</select>
+	
+	<!-- 添加活动 -->
+	<insert id="addActivity" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityDTO">
+		INSERT INTO common_activity(
+			hxuuid, tp,  title, content, stime, etime, overtime, address, contact, tel, longitude, latitude, 
+			enternum, praisenum, verifystatus, verifytorid, verifytor, dateverify, verifydesc, activiissueid, 
+			data_state, created_by, date_created, updated_by, date_updated
+		) VALUES(
+			#{hxuuid,jdbcType=VARCHAR},#{tp,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{stime,jdbcType=VARCHAR},
+			#{etime,jdbcType=VARCHAR},#{overtime,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{contact,jdbcType=VARCHAR},#{tel,jdbcType=VARCHAR},
+			#{longitude,jdbcType=VARCHAR},#{latitude,jdbcType=VARCHAR},#{enternum,jdbcType=INTEGER},#{praisenum,jdbcType=INTEGER},#{verifystatus,jdbcType=VARCHAR},
+			#{verifytorid,jdbcType=VARCHAR},#{verifytor,jdbcType=VARCHAR},#{dateverify,jdbcType=INTEGER},#{verifydesc,jdbcType=INTEGER},#{activiissueid,jdbcType=VARCHAR},
+			#{data_state,jdbcType=VARCHAR},#{created_by,jdbcType=VARCHAR},#{date_created,jdbcType=VARCHAR},#{updated_by,jdbcType=VARCHAR},#{date_updated,jdbcType=VARCHAR}
+		);
+	</insert>
+	<!-- 根据id查询活动信息 -->
+	<select id="queryActivityById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM common_activity 
+		<where>
+			data_state = 'Y'
+			AND hxuuid = #{activityid,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<!-- 更新活动 -->
+	<update id="updatehuodongverify" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityDTO">
+		UPDATE common_activity 
+			<set>
+				<if test="verifystatus!=null and verifystatus!=''">
+					verifystatus = #{verifystatus,jdbcType=VARCHAR},
+				</if>
+				<if test="verifydesc!=null and verifydesc!=''">
+					verifydesc = #{verifydesc,jdbcType=VARCHAR},
+				</if>
+				<if test="updated_by!=null and updated_by!=''">
+					updated_by = #{updated_by,jdbcType=VARCHAR},
+				</if>
+				<if test="verifytorid!=null and verifytorid!=''">
+					verifytorid = #{verifytorid,jdbcType=VARCHAR},
+				</if>
+				<if test="verifytor!=null and verifytor!=''">
+					verifytor = #{verifytor,jdbcType=VARCHAR},
+				</if>
+				dateverify = now(),
+				date_updated = now()
+			</set>
+			WHERE hxuuid = #{hxuuid,jdbcType=VARCHAR}
+	</update>
+</mapper>

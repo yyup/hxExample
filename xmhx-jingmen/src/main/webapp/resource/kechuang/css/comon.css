@@ -1,0 +1,126 @@
+       body {
+            padding-top: 80px;
+            padding-bottom: 40px;
+            color: #5a5a5a;
+            font-family: "微软雅黑";
+        }
+        .container-fluid{
+        	padding:0 50px;
+        }
+        .navbar{
+        	min-height: 80px;
+        	background: rgba(255,255,255,.9);
+        	box-shadow: 0 0 8px 0 rgba(0,0,0,.2);
+        }
+        .navbar-nav{
+	        margin-top: 15px;
+	        font-size: 16px;
+        }
+        .navbar-nav a{
+        	color: #515354;
+        }
+        .navbar-default .navbar-nav>.active>a{
+        	color:#008cd6;
+        	background: none;
+        }
+
+        /* banner */      
+          .carousel {
+            height: 500px;
+            margin-bottom: 60px;
+        }
+
+        .carousel .item {
+            height: 500px;
+            background-color: #000;
+        }
+
+        .carousel .item img {
+            width: 100%;
+            height: 500px;
+        }
+        /* 简介 */
+        .title{
+        	width: 100%;
+        	text-align: center;
+        	margin: 0 auto;
+        }
+        .title h1>span{
+        	font-size: 20px;
+        }
+        .summary {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .summary .col-md-4 {   
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .summary .col-md-4 .service_1{
+        	width: 365px;
+        	height: 315px;
+        	border: 1px solid #e2e2e2;
+        	box-shadow: ;
+        }
+
+        /* 特性 */
+
+        .feature-divider {
+            margin: 40px 0;
+        }
+
+        .feature {
+            padding: 30px 0;
+        }
+
+        .feature-heading {
+            font-size: 50px;
+            color: #2a6496;
+        }
+
+        .feature-heading .text-muted {
+            font-size: 28px;
+        }
+
+        /* 响应式布局 */
+
+        @media (max-width: 768px) {
+
+            .summary {
+                padding-right: 3px;
+                padding-left: 3px;
+            }
+
+            .carousel {
+                height: 300px;
+                margin-bottom: 30px;
+            }
+
+            .carousel .item {
+                height: 300px;
+            }
+
+            .carousel img {
+                min-height: 300px;
+            }
+
+            .carousel-caption p {
+                font-size: 16px;
+                line-height: 1.4;
+            }
+
+            .feature-heading {
+                font-size: 34px;
+            }
+
+            .feature-heading .text-muted {
+                font-size: 22px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .feature-heading {
+                margin-top: 120px;
+            }
+        }

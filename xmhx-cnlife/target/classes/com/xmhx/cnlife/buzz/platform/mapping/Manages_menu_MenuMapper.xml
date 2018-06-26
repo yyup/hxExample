@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Manages_menu_MenuDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.manages.init.MenuDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menu_name" jdbcType="VARCHAR" />
+		<result column="menu_code" property="menu_code" jdbcType="VARCHAR" />
+		<result column="parent_menu_code" property="parent_menu_code" jdbcType="VARCHAR" />
+		<result column="menu_desc" property="menu_desc" jdbcType="VARCHAR" />
+		<result column="menu_url" property="menu_url" jdbcType="VARCHAR" />
+		<result column="menu_icon" property="menu_icon" jdbcType="VARCHAR" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		hxuuid, menu_name, menu_code, parent_menu_code, menu_desc, menu_url, menu_icon, weight, 
+		data_state, created_by, date_created, updated_by, date_updated
+	</sql>
+		
+	<!-- 命名绑定 -->
+	<select id="getAllmenus" resultMap="BaseResultMap">
+		SELECT
+		 <include refid="Base_Column_List" />
+		  FROM manages_menu a
+		 ORDER BY a.weight
+	</select>
+	
+	<select id="getChildrenmenu" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		  FROM manages_menu a
+		 WHERE a.parent_menu_code = #{menucode,jdbcType=VARCHAR}
+		 ORDER BY a.weight
+	</select>
+	
+	<!-- <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from course_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from course_info
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" parameterType="org.andy.shop.model.CourseInfo">
+		insert into course_info (id, cname, caddress
+		)
+		values (#{id,jdbcType=INTEGER}, #{cname,jdbcType=VARCHAR},
+		#{caddress,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertSelective" parameterType="org.andy.shop.model.CourseInfo">
+		insert into course_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="cname != null">
+				cname,
+			</if>
+			<if test="caddress != null">
+				caddress,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="cname != null">
+				#{cname,jdbcType=VARCHAR},
+			</if>
+			<if test="caddress != null">
+				#{caddress,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="org.andy.shop.model.CourseInfo">
+		update course_info
+		<set>
+			<if test="cname != null">
+				cname = #{cname,jdbcType=VARCHAR},
+			</if>
+			<if test="caddress != null">
+				caddress = #{caddress,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="org.andy.shop.model.CourseInfo">
+		update course_info
+		set cname = #{cname,jdbcType=VARCHAR},
+		caddress = #{caddress,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update> -->
+</mapper>

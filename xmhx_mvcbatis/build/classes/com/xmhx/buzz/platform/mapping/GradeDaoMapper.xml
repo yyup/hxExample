@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.buzz.platform.dao.test.GradeDao">
+	<resultMap id="BaseResultMap" type="com.xmhx.buzz.platform.model.test.GradeDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="gname" property="gname" jdbcType="VARCHAR" />
+		<association property="teacher" javaType="com.xmhx.buzz.platform.model.test.TeacherDTO">
+             <id property="tid" column="tid" jdbcType="INTEGER"/>
+             <result property="tname" column="tname" jdbcType="VARCHAR"/>
+             <result property="gid" column="gid" jdbcType="INTEGER"/>
+        </association> 
+        
+        <collection property="students" javaType="list" ofType="com.xmhx.buzz.platform.model.test.StudentDTO">
+			<id property="sid" column="sid" jdbcType="INTEGER" />
+			<result property="sname" column="sname" jdbcType="VARCHAR" />
+			<result property="gid" column="gid" jdbcType="INTEGER" />
+		</collection>
+	</resultMap>
+	<!-- 根据id查询班级信息 -->
+	<select id="queryGradeById" resultMap="BaseResultMap">
+		SELECT * FROM grade g where g.id = #{id}
+	</select>
+	
+	<!-- 一对一 -->
+	<select id="getGradeList" resultMap="BaseResultMap">
+		SELECT * FROM grade g LEFT JOIN teacher t on g.id=t.gid
+	</select>
+	
+	<!-- 一对多 -->
+	<select id="getGradeStudentList" resultMap="BaseResultMap">
+		SELECT * FROM grade g LEFT JOIN student s on g.id=s.gid
+	</select>
+	
+	<!-- 带条件查询 like-->
+	<select id="getStudents" resultMap="BaseResultMap" parameterType="com.xmhx.buzz.platform.model.test.GradeDTO">
+		select * from grade g
+		<where>
+			<if test="id!=null">
+				AND g.id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="gname!=null">
+				AND g.gname like #{gname} 
+			</if>
+		</where>
+	</select>
+	<!-- 带条件查询 in 参数为数组（此例）、list、map-->
+	<select id="queryStudentsByIn" resultMap="BaseResultMap">
+		select * from grade g where 
+			 g.gname in 
+			<foreach item="item" index="index" collection="array" open="("  
+	            separator="," close=")">  
+	            #{item}  
+	       	 </foreach>
+	</select>
+	<!--批量更新-->
+	<update id="updateGradeBatch" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="g" index="index" separator=";">
+			UPDATE grade  
+			SET gname = #{g.gname,jdbcType=VARCHAR}
+			WHERE id = #{g.id}
+		</foreach>
+		; end;
+	</update>
+	<!--批量更新(数组)-->
+	<update id="queryGradeByIdArray" >
+		UPDATE grade  
+			SET gname = #{nm,jdbcType=VARCHAR} WHERE id in 
+			<foreach item="item" index="index" collection="ids" open="("  
+	            separator="," close=")">  
+	            #{item}  
+	       	 </foreach>
+	</update>
+	
+	<!--单个更新-->
+	<update id="updateGradeOne">
+		UPDATE grade  
+		<set>
+			<if test="gname!=null">
+				gname = #{gname,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 批量删除 -->
+	<delete id="delGradeBatch">
+		delete from grade 
+		where id in 
+		<foreach collection="array" item="idss" open="(" separator="," close=")">
+			#{idss, jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

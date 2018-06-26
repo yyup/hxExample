@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Webservices_messages_PropertyrightDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.MessagesDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="msgMobile" property="msgMobile" jdbcType="VARCHAR" />
+		<result column="msgType" property="msgType" jdbcType="VARCHAR" />
+		<result column="msgTitle" property="msgTitle" jdbcType="VARCHAR" />
+		<result column="msgContent" property="msgContent" jdbcType="VARCHAR" />
+		<result column="costName" property="costName" jdbcType="VARCHAR" />
+		<result column="costMoney" property="costMoney" jdbcType="VARCHAR" />
+		<result column="costCutoff" property="costCutoff" jdbcType="VARCHAR" />
+		<result column="costOverdue" property="costOverdue" jdbcType="VARCHAR" />
+		<result column="overdueFine" property="overdueFine" jdbcType="VARCHAR" />
+		<result column="sumMoney" property="sumMoney" jdbcType="VARCHAR" />
+		<result column="contractNo" property="contractNo" jdbcType="VARCHAR" />
+		<result column="contractType" property="contractType" jdbcType="VARCHAR" />
+		<result column="contractCutoff" property="contractCutoff" jdbcType="VARCHAR" />
+		<result column="daysRemaining" property="daysRemaining" jdbcType="VARCHAR" />
+		<result column="discription" property="discription" jdbcType="VARCHAR" />
+		<result column="ifreply" property="ifreply" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		hxuuid, msgMobile, msgType, msgTitle, msgContent, costName, costMoney, costCutoff, costOverdue, 
+		overdueFine, sumMoney, contractNo, contractType, contractCutoff, daysRemaining, discription, ifreply,  
+		data_state, created_by, date_created, updated_by, date_updated
+	</sql>
+	
+	<!--查询全部需要推送的消息  -->
+	<select id="queryMessages" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		from webservices_messages
+		where ifreply = #{replayType,jdbcType=VARCHAR}
+	</select>	
+	
+</mapper>

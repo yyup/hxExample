@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Webservices_messages_MessagesDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.webservices.MessagesDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="msgMobile" property="msgMobile" jdbcType="VARCHAR" />
+		<result column="msgType" property="msgType" jdbcType="VARCHAR" />
+		<result column="msgTitle" property="msgTitle" jdbcType="VARCHAR" />
+		<result column="msgContent" property="msgContent" jdbcType="VARCHAR" />
+		<result column="costName" property="costName" jdbcType="VARCHAR" />
+		<result column="costMoney" property="costMoney" jdbcType="VARCHAR" />
+		<result column="costCutoff" property="costCutoff" jdbcType="VARCHAR" />
+		<result column="costOverdue" property="costOverdue" jdbcType="VARCHAR" />
+		<result column="overdueFine" property="overdueFine" jdbcType="VARCHAR" />
+		<result column="sumMoney" property="sumMoney" jdbcType="VARCHAR" />
+		<result column="contractNo" property="contractNo" jdbcType="VARCHAR" />
+		<result column="contractType" property="contractType" jdbcType="VARCHAR" />
+		<result column="contractCutoff" property="contractCutoff" jdbcType="VARCHAR" />
+		<result column="daysRemaining" property="daysRemaining" jdbcType="VARCHAR" />
+		<result column="discription" property="discription" jdbcType="VARCHAR" />
+		<result column="ifreply" property="ifreply" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		hxuuid, msgMobile, msgType, msgTitle, msgContent, costName, costMoney, costCutoff, costOverdue, 
+		overdueFine, sumMoney, contractNo, contractType, contractCutoff, daysRemaining, discription, ifreply, 
+		date_created
+	</sql>
+	
+	<!-- 物业费逾期提醒 -->
+	<insert id="addPropertyOverdue" parameterType="com.xmhx.cnlife.buzz.platform.model.webservices.MessagesDTO">
+		insert into webservices_messages 
+		(hxuuid, msgMobile, msgType, msgTitle, msgContent, costName, costMoney, costCutoff, 
+			costOverdue, overdueFine, sumMoney, contractNo, contractType, contractCutoff, daysRemaining, 
+			discription, ifreply, data_state, created_by, date_created, updated_by, date_updated
+		) values (
+			#{hxuuid,jdbcType=VARCHAR}, #{msgMobile,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, #{msgTitle,jdbcType=VARCHAR},
+			#{msgContent,jdbcType=VARCHAR}, #{costName,jdbcType=VARCHAR}, #{costMoney,jdbcType=VARCHAR}, #{costCutoff,jdbcType=VARCHAR},
+			#{costOverdue,jdbcType=VARCHAR}, #{overdueFine,jdbcType=VARCHAR}, #{sumMoney,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, 
+			#{contractType,jdbcType=VARCHAR}, #{contractCutoff,jdbcType=VARCHAR}, #{daysRemaining,jdbcType=VARCHAR}, #{discription,jdbcType=VARCHAR}, 
+			#{ifreply,jdbcType=VARCHAR}, #{data_state,jdbcType=VARCHAR}, #{created_by,jdbcType=VARCHAR}, #{date_created,jdbcType=VARCHAR}, 
+			#{updated_by,jdbcType=VARCHAR}, #{date_updated,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 修改应答状态 -->
+	<update id="updateMessagesIfreply">
+		UPDATE webservices_messages 
+			SET ifreply = #{replyState, jdbcType=VARCHAR}
+				WHERE hxuuid IN 
+		    <foreach collection="uuids" item="item" index="index" open="(" separator="," close=")">
+		    	#{item}
+		    </foreach>
+	</update>
+	
+	<!-- 根据id查询消息 -->
+	<select id="queryMessage"  resultMap="BaseResultMap" parameterType="com.xmhx.cnlife.buzz.platform.model.webservices.MessagesDTO">
+		SELECT  
+			<include refid="Base_Column_List" />
+			FROM webservices_messages 
+			<where>
+				<if test="hxuuid!=null and hxuuid!=''">
+					hxuuid = #{hxuuid, jdbcType=VARCHAR}
+				</if>
+			</where>
+	</select>
+	<!-- 查询消息列表总记录（分页） -->
+	<select id="getMessageCount" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultType="INTEGER">
+		SELECT COUNT(1) FROM webservices_messages 
+		<where>
+			data_state = 'Y'
+			<if test="t.msgMobile != null and t.msgMobile != ''">
+				AND (msgMobile LIKE CONCAT('%',#{t.msgMobile,jdbcType=VARCHAR},'%') OR msgMobile LIKE CONCAT('%',#{t.msgMobile,jdbcType=VARCHAR},'%') ) 
+			</if>
+			<if test="t.msgTitle != null and t.msgTitle != ''">
+				AND (msgTitle LIKE CONCAT('%',#{t.msgTitle,jdbcType=VARCHAR},'%') OR msgTitle LIKE CONCAT('%',#{t.msgTitle,jdbcType=VARCHAR},'%') ) 
+			</if>
+		</where>
+	</select>
+	<!-- 查询消息列表（分页） -->
+	<select id="getMessageList" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+			FROM webservices_messages
+			<where>
+				data_state = 'Y'
+				<if test="t.msgMobile != null and t.msgMobile != '' ">
+					AND (msgMobile LIKE CONCAT('%',#{t.msgMobile,jdbcType=VARCHAR},'%') OR msgMobile LIKE CONCAT('%',#{t.msgMobile,jdbcType=VARCHAR},'%') )
+				</if>
+				<if test="t.msgTitle != null and t.msgTitle != '' ">
+					AND (msgTitle LIKE CONCAT('%',#{t.msgTitle,jdbcType=VARCHAR},'%') OR msgTitle LIKE CONCAT('%',#{t.msgTitle,jdbcType=VARCHAR},'%') ) 
+				</if>
+			</where>
+				ORDER BY ifreply ASC, data_state DESC 
+			  	LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+	</select>
+	<!-- 删除消息(批量) -->
+	<delete id="delMessages">
+		DELETE FROM webservices_messages 
+		WHERE hxuuid IN 
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id, jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 根据ids查询消息 -->
+	<select id="queryMessagesByIds" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> 
+			FROM webservices_messages WHERE 
+			 hxuuid IN 
+			<foreach collection="array" item="id" open="("  
+	            separator="," close=")">  
+	            #{id, jdbcType=VARCHAR}  
+	       	 </foreach>
+	</select>
+</mapper>

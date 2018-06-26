@@ -1,0 +1,90 @@
+/* 
+ * Form Validate Style
+ * Author : wujin
+ */
+ .form-info{
+ 	width: 18px;
+	height: 18px;
+	display: inline-block;
+	background: url(../images/validate/infomation_18.png);
+	background-position: 0px -1px;
+	margin: 0px 5px 0px 0px;
+	vertical-align: middle;
+ }
+ .form-warnning{
+ 	
+ }
+ .form-error{
+ 	width: 18px;
+	height: 18px;
+	display: inline-block;
+	background: url(../images/validate/form-validate-icon.png);
+	background-position: -34px -5px;
+	margin: 0px 5px 0px 5px;
+	vertical-align: middle;
+ }
+ .form-success{
+ 	width:22px;
+	height: 18px;
+	display: inline-block;
+	background: url(../images/validate/form-validate-icon.png);
+	background-position: 3px -2px;
+	margin: 0px 5px 0px 5px;
+	vertical-align: middle;
+ }
+ .form-error-basic{
+ 	width: 15px;
+	height: 15px;
+	display: inline-block;
+	background: url(../images/validate/failer_basic.png);
+	background-position: 0px 0px;
+	margin: 0px 5px 0px 15px;
+	vertical-align: middle;
+ }
+ .form-success-basic{
+ 	width:14px;
+	height: 14px;
+	display: inline-block;
+	background: url(../images/validate/success_basic.png);
+	background-position: 0px 0px;
+	margin: 0px 5px 0px 16px;
+	vertical-align: middle;
+ }
+ .form-success22{
+ 	width:22px;
+	height: 18px;
+	display: inline-block;
+	background: url(../images/validate/form-validate-icon22.png) no-repeat center center;
+	margin: 0px 5px 0px 5px;
+	vertical-align: middle;
+ }
+ .tip-success{
+ 	width: 34px;
+	height: 34px;
+	display: inline-block;
+	background: url(../images/tips/common_icon9.png);
+	margin: 0px 10px 0px 0px;
+	vertical-align: middle;
+ }
+ .icon-lodding{
+ 	width: 32px;
+	height: 32px;
+	display: inline-block;
+	background: url(../images/validate/lodding.gif);
+	margin: 0px 10px 0px 5px;
+	vertical-align: middle;
+ }
+.lodding{
+	height: 50px;
+	width: 210px;
+	border-radius: 3px;
+	font-size: 12px;
+	margin: 20% auto;
+	text-align: center;
+	vertical-align: middle;
+}
+.lodding span{
+	line-height: 50px;
+	height: 40px;
+	margin: auto 20px;
+}

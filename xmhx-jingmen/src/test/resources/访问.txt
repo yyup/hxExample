@@ -1,0 +1,19 @@
+-- 后台访问入口
+http://localhost:8080/xmhx-cnlife/manages/gologon.hx
+-- 测环
+http://120.42.33.21:8678/xmhx-cnlife/manages/gologon.hx
+-- 图片
+http://120.42.33.21:8678/xmhx-cnlife/head/1481789208696.jpg
+
+
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '大白兔', '张三', '1371381111', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '解放', '李四', '1371381112', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '经典', '王五', '1371381113', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '英伦', '赵六', '1371381114', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '定位', '田七', '1371381115', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '基地', '老八', '1371381116', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '开讲啦', '万九', '1371381117', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '肺气肿', '整十', '1371381118', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '肺气肿', '钱千', '1371381119', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '肺气肿', '金万', '1371381120', '000000');
+insert into common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd) values (uuid(), '肺气肿', '钻亿', '1371381121', '000000');

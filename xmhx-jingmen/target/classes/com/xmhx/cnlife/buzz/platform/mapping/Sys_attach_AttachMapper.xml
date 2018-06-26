@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.AttachDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.manages.attach.AttachDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="attach_name" property="attachName" jdbcType="VARCHAR" />
+		<result column="attach_orig_name" property="attachOrigName" jdbcType="VARCHAR" />
+		<result column="attach_path" property="attachPath" jdbcType="VARCHAR" />
+		<result column="attach_type" property="attachType" jdbcType="VARCHAR" />
+		<result column="attach_mod" property="attachMod" jdbcType="VARCHAR" />
+		<result column="attachfk_id" property="attachfkId" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		hxuuid,data_state, created_by,date_created, updated_by, date_updated,
+		attach_name,attach_orig_name,attach_path,attach_type,attach_mod,attachfk_id
+	</sql>
+	
+	<!-- 根据ID查询附件 -->
+	<select id="queryAttachmentById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM sys_attach 
+		<where>
+			data_state = 'Y'
+			AND hxuuid = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 根据来源ID查询附件列表 -->
+	<select id="queryAttachByfkid" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM (
+			SELECT * FROM sys_attach a
+			 WHERE a.data_state = 'Y'
+			   AND a.attachfk_id = #{_parameter}
+			 ORDER BY a.date_updated DESC
+		) t LIMIT 1
+	</select>
+	
+	<!-- 增加一个附件 -->
+	<insert id="saveAttachment" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.attach.AttachDTO" >
+		INSERT INTO sys_attach(
+			hxuuid, data_state, created_by,date_created, updated_by, date_updated,
+			attach_name,attach_orig_name,attach_path,attach_type,attach_mod,attachfk_id
+		)
+		 VALUES(
+		 	#{hxuuid},#{data_state},#{created_by},#{date_created},#{updated_by},#{date_updated},
+		 	#{attachName},#{attachOrigName},#{attachPath},#{attachType},#{attachMod},#{attachfkId}
+		 )
+	</insert>
+	
+	<!-- 根据ID删除附件 -->
+	<delete id="delAttachById" parameterType="java.lang.String">
+		DELETE FROM sys_attach
+		<where>
+			hxuuid=#{_parameter}
+		</where>
+	</delete>
+	
+	<!-- 根据来源ID删除附件 -->
+	<delete id="deleteAttachByfk">
+		DELETE FROM sys_attach
+		<where>
+			attachfk_id in 
+			<foreach collection="array" item="id" open="(" separator="," close=")">
+				#{id, jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</delete>
+	<!-- 更新来源ID -->
+	<update id="updateAttachfkid" parameterType="Map">
+		UPDATE sys_attach
+		<set>
+			attachfk_id=#{fkid}
+		</set>
+		<where>
+			hxuuid=#{id}
+		</where>
+	</update>
+	<!-- 更新附件来源id（数组批量更新） -->
+	<update id="updateAttachfkidForArray" >
+		UPDATE sys_attach  
+			SET attachfk_id = #{hxuuid,jdbcType=VARCHAR} WHERE hxuuid in 
+			<foreach item="item" index="index" collection="attachidArray" open="("  
+	            separator="," close=")">  
+	            #{item}  
+	       	 </foreach>
+	</update>
+	<!--查询活动图片  -->
+	<select id="queryPiclist" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM sys_attach 
+			<where>
+				attachfk_id = #{activityid,jdbcType=VARCHAR}
+			</where>
+	</select>
+</mapper>

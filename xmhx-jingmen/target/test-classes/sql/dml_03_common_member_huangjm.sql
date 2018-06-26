@@ -1,0 +1,2 @@
+insert into common_member(hxuuid, member_name, member_mobile, member_pwd,data_state, created_by, date_created, updated_by, date_updated) 
+values (uuid(),'admin','admin','E10ADC3949BA59ABBE56E057F20F883E','Y', 'system', now(), 'system', now());

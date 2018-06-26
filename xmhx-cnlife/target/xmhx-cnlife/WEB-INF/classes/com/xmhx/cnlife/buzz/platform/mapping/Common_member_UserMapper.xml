@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Common_member_UserDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.manages.user.UserDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="member_nick" property="member_nick" jdbcType="VARCHAR" />
+		<result column="member_name" property="member_name" jdbcType="VARCHAR" />
+		<result column="member_mobile" property="member_mobile" jdbcType="VARCHAR" />
+		<result column="member_pwd" property="member_pwd" jdbcType="VARCHAR" />
+		<result column="pattern_lock" property="pattern_lock" jdbcType="VARCHAR" />
+		<result column="member_head" property="member_head" jdbcType="VARCHAR" />
+		<result column="first_char" property="first_char" jdbcType="VARCHAR" />
+		<result column="member_sex" property="member_sex" jdbcType="VARCHAR" />
+		<result column="member_email" property="member_email" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		hxuuid, member_nick, member_name, member_mobile, member_pwd, pattern_lock, member_head, first_char, member_sex, 
+		member_email, data_state, created_by,date_created, updated_by, date_updated
+	</sql>
+	
+	<!-- 查询用户列表总记录（分页） -->
+	<select id="getUserCount" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultType="INTEGER">
+		SELECT COUNT(1) FROM common_member 
+		<where>
+			data_state = 'Y'
+			<if test="t.nameormobile != null and t.nameormobile != ''">
+				AND member_name LIKE CONCAT('%',#{t.nameormobile,jdbcType=VARCHAR},'%') OR member_mobile LIKE CONCAT('%',#{t.nameormobile,jdbcType=VARCHAR},'%') 
+			</if>
+			AND member_mobile != 'admin'
+		</where>
+	</select>
+	
+	<!-- 查询用户列表（分页） -->
+	<select id="getUserList" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="BaseResultMap">
+		SELECT * FROM common_member
+		<where>
+			data_state = 'Y'
+			<if test="t.nameormobile != null and t.nameormobile != '' ">
+				AND member_name LIKE CONCAT('%',#{t.nameormobile,jdbcType=VARCHAR},'%') OR member_mobile LIKE CONCAT('%',#{t.nameormobile,jdbcType=VARCHAR},'%') 
+			</if>
+			AND member_mobile != 'admin'
+		</where>
+		<if test="sort != null and sort != '' ">
+			ORDER BY ${sort}
+			<if test="order == 'desc' or order == 'DESC' ">
+				DESC
+			</if>
+		</if>
+		  	LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+	</select>
+	
+	<!-- 查询所有用户 -->
+	<select id="getAllUsers" resultMap="BaseResultMap">
+		SELECT * FROM common_member
+		<where>
+			data_state = 'Y'
+			AND member_mobile != 'admin'
+		</where>
+	</select>
+	
+	<!-- 根据UUID，精确查询某个用户 -->
+	<select id="getUserByUUID" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM common_member a WHERE data_state = 'Y' AND a.hxuuid = #{hxuuid}
+	</select>
+	<!-- 根据手机号，精确查询某个用户(不包括admin) -->
+	<select id="getUserByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM common_member a WHERE data_state = 'Y' AND a.member_mobile = #{member_mobile} AND a.member_mobile != 'admin'
+	</select>
+	<!-- 根据手机号，精确查询某个用户(包括admin) -->
+	<select id="getUserByMobileOrAdmin" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM common_member a WHERE data_state = 'Y' AND a.member_mobile = #{member_mobile}
+	</select>
+	<!-- 增加一个用户 -->
+	<insert id="addUser" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.user.UserDTO" >
+		INSERT INTO common_member(hxuuid, member_nick, member_name, member_mobile, member_pwd, pattern_lock, member_head, first_char, member_sex, 
+							member_email, data_state, created_by,date_created, updated_by, date_updated)
+		 VALUES(#{hxuuid},#{member_nick},#{member_name},#{member_mobile},#{member_pwd},#{pattern_lock},#{member_head},#{first_char},#{member_sex},#{member_email},#{data_state},#{created_by},#{date_created},#{updated_by},#{date_updated})
+	</insert>
+	
+	<!-- 修改一个用户 -->
+	<update id="modifyUser" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.user.UserDTO" >
+		UPDATE common_member
+		<set>
+			<if test="member_mobile!=null and member_mobile!='' ">
+				member_mobile = #{member_mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="member_nick!=null and member_nick!='' ">
+				member_nick = #{member_nick,jdbcType=VARCHAR},
+			</if>
+			<if test="member_name!=null and member_name!='' ">
+				member_name = #{member_name,jdbcType=VARCHAR},
+			</if>
+			<if test="member_head!=null and member_head!='' ">
+				member_head = #{member_head,jdbcType=VARCHAR},
+			</if>
+			<if test="member_sex!=null and member_sex!='' ">
+				member_sex = #{member_sex,jdbcType=VARCHAR},
+			</if>
+			<if test="member_email!=null and member_email!='' ">
+				member_email = #{member_email,jdbcType=VARCHAR},
+			</if>
+			<if test="member_pwd!=null and member_pwd!='' ">
+				member_pwd = #{member_pwd,jdbcType=VARCHAR},
+			</if>
+			<if test="pattern_lock!=null and pattern_lock!='' ">
+				pattern_lock = #{pattern_lock,jdbcType=VARCHAR},
+			</if>
+			<if test="first_char!=null and first_char!='' ">
+				first_char = #{first_char,jdbcType=VARCHAR},
+			</if>
+			<if test="data_state!=null and data_state!='' ">
+				data_state = #{data_state,jdbcType=VARCHAR},
+			</if>
+			<if test="updated_by!=null and updated_by!='' ">
+				updated_by = #{updated_by,jdbcType=VARCHAR},
+			</if>
+			date_updated = #{date_updated,jdbcType=VARCHAR}	
+		</set>
+		WHERE hxuuid = #{hxuuid,jdbcType=INTEGER}
+	</update>
+	<!-- 修改手势密码 -->
+	<update id="modifyPatternlock" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.user.UserDTO" >
+		UPDATE common_member
+		<set>
+			pattern_lock = #{pattern_lock,jdbcType=VARCHAR}
+		</set>
+		<where>
+			data_state = 'Y'
+			AND member_mobile = #{member_mobile,jdbcType=VARCHAR}
+		</where>
+	</update>	
+	<!-- 查询手势密码开关 -->
+	<select id="queryIfExistPatternlock" parameterType="java.lang.String" resultType="INTEGER">
+		SELECT COUNT(1) FROM common_member
+		<where>
+			data_state = 'Y'
+			AND member_mobile = #{_parameter}
+			AND pattern_lock is not null
+		</where>
+	</select>
+</mapper>

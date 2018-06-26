@@ -1,0 +1,172 @@
+﻿/* 代码整理：懒人之家 lanrenzhijia.com */
+@import url('reset.css');
+/*
+body {
+	background-color: #313211;
+	font-family: helvetica, "Times New Roman", Times, serif;
+}
+*/
+a:focus {
+	outline: none;
+}
+.clear {
+	clear: both;
+}
+/* width 从760px 改成 100% */
+/*margin-top:50px 改成 0px;　*/
+#page-wrap {
+	position: relative;
+	margin-right: 15px;
+	margin-left: 15px;
+	margin-top: 0px;
+	margin-bottom: 15px;
+	border:2px solid #F6D098;
+	border-top: none;
+}
+
+#page-wrap1 {
+	position: relative;
+	margin-right: 15px;
+	margin-left: 15px;
+	margin-top: 0px;
+	margin-bottom: 15px;
+	border:2px solid #F6D098;
+	border-top: none;
+}
+
+ul#main-nav {
+	margin-left: 20px;
+}
+/**/
+ul#main-nav li {
+	float: left;
+	position: relative;
+	margin-left: -20px;
+	display: inline;
+}
+
+ul#main-nav li a {
+	position: relative;
+	width: 110px;
+	height: 29px;
+	display: block;
+	background-image: url('../images/tabs.png');
+	background-position: center center;
+	color: #44403b;
+	text-decoration: none;
+	font-size: 12px;
+	padding-top: 12px;
+	text-align: left;
+	padding-left: 30px;
+	font-weight: bold;
+}
+
+ul#main-nav li.current a {
+	background-position: 0 top;
+	color: black;
+}
+ul#main-nav li a:hover {
+	background-position: 0 bottom;
+	color: black;
+}
+
+ul#main-nav li.current {
+	z-index: 100;
+}
+ul#main-nav li.baot1 {
+	z-index: 100;
+}
+ul#main-nav li.baot2 {
+	z-index: 99;
+}
+ul#main-nav li.baot3 {
+	z-index: 98;
+}
+ul#main-nav li.baot4 {
+	z-index: 97;
+}
+ul#main-nav li.baot5 {
+	z-index: 96;
+}
+ul#main-nav li.baot6 {
+	z-index: 95;
+}
+ul#main-nav li.baot7 {
+	z-index: 94;
+}
+ul#main-nav li.baot8 {
+	z-index: 93;
+}
+ul#main-nav li.baot9 {
+	z-index: 92;
+}
+ul#main-nav li.baot10 {
+	z-index: 91;
+}
+ul#main-nav li.baot11 {
+	z-index: 90;
+}
+ul#main-nav li.baot12 {
+	z-index: 89;
+}
+ul#main-nav li.baot13 {
+	z-index: 88;
+}
+ul#main-nav li.baot14 {
+	z-index: 87;
+}
+ul#main-nav li.baot15 {
+	z-index: 86;
+}
+/*
+#image {
+	position: relative;
+	float: left;
+	margin-left: 40px;
+	margin-top: 25px;
+}*/
+/* 把height 改成100%， 把color: #ffffff 删掉，把background-color: #577295 删掉，把background-image: url('../images/featured-border.jpg') 删掉*/
+/*
+#featured {
+	position: relative;
+	background-repeat: repeat-y;
+	background-position: left;
+	height: 100%;
+	
+}
+#featured h1 {
+	font-size: 24px;
+	position: relative;
+	margin-bottom: 17px;
+}
+#featured p {
+	line-height: 18px;
+	font-size: 12px;
+}
+*/
+/* float从 right 改成 left ，width: 322px 改成 100%  */
+/*
+#featured-content{
+	float: left;
+	position: relative;
+	width: 100%;
+	margin-top: 30px;
+	margin-right: 35px;
+	display: inline;
+}
+*/
+/* 渐变颜色*/
+.linear{ 
+
+width:100%; 
+height:200px;
+
+/*FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#00ffff,endColorStr=/#ffffff); /*IE 6 7 8*/ 
+
+/*background: -ms-linear-gradient(top,#00ffff ,  #ffffff);      IE 10    */
+background:-moz-linear-gradient(top,rgb(255, 255, 255),rgba(255, 156, 0, 0.42));/*火狐*/ 
+background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgb(255, 255, 255)), to(rgba(255, 156, 0, 0.42)));/*谷歌*/ 
+background: -o-linear-gradient(top, rgb(255, 255, 255),rgba(255, 156, 0, 0.42));  /*Opera 11.10+*/
+*/
+}
+

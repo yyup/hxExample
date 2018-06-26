@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Common_activity_comment_CommentDAO">
+	<resultMap id="BaseResultMap" type="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityCommentDTO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="activityid" property="activityid" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+		
+		<result column="member_name" property="member_name" jdbcType="VARCHAR" />
+		<result column="member_head" property="member_head" jdbcType="VARCHAR" />
+		
+		<!-- 评论图片 -->
+		<!-- <collection property="students" javaType="list" ofType="com.xmhx.buzz.platform.model.test.StudentDTO">
+			<id property="sid" column="sid" jdbcType="INTEGER" />
+			<result property="sname" column="sname" jdbcType="VARCHAR" />
+			<result property="gid" column="gid" jdbcType="INTEGER" />
+		</collection> -->
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, hxuuid, activityid, content, data_state, created_by, date_created
+	</sql>
+	
+	<!-- 查询评论列表 -->
+	<select id="queryNextComment" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.activity.ActivityCommentDTO" resultMap="BaseResultMap">
+		SELECT a.*,m.member_name,m.member_head FROM common_activity_comment a LEFT JOIN common_member m ON a.created_by=m.hxuuid
+		<where>
+			<if test="activityid!=null and activityid!=''">
+				AND activityid = #{activityid,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<!-- 创建时间升序，查最新5条 -->  
+		ORDER BY a.date_created DESC LIMIT 0,5
+	</select>
+	
+</mapper>

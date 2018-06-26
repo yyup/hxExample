@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Sys_news_NewsDAO">
+	<resultMap id="sysnews" type="com.xmhx.cnlife.buzz.platform.model.manages.news.NewsDTO">
+	    <result column="id" property="id" jdbcType="INTEGER" />
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="read_count" property="readCount" jdbcType="INTEGER" />
+		<result column="news_title" property="newsTitle" jdbcType="VARCHAR" />
+		<result column="news_subtitle" property="newsSubtitle" jdbcType="VARCHAR" />
+		<result column="news_type" property="newsType" jdbcType="VARCHAR" />
+		<result column="news_content" property="newsContent" jdbcType="VARCHAR" />
+		<result column="verify_status" property="verifyStatus" jdbcType="VARCHAR" />
+		<result column="verifytor_id" property="verifytorId" jdbcType="VARCHAR" />
+		<result column="verifytor" property="verifytor" jdbcType="VARCHAR" />
+		<result column="verify_date" property="verifyDate" jdbcType="VARCHAR" />
+		<result column="verify_desc" property="verifyDesc" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+		<result column="attachFullpath" property="attachFullpath" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id,hxuuid,read_count,news_title,news_subtitle,news_type,
+		news_content,verify_status,verifytor_id,verifytor,verify_date,
+		verify_desc,data_state,created_by,date_created,updated_by,
+		date_updated
+	</sql>
+	
+	<!-- 添加新闻 -->
+	<insert id="addNews" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.news.NewsDTO">
+		INSERT INTO sys_news(
+			hxuuid,read_count,news_title,news_subtitle,news_type,
+			news_content,verify_status,verifytor_id,verifytor,verify_date,
+			verify_desc,data_state,created_by,date_created,updated_by,
+			date_updated
+		) VALUES(
+			#{hxuuid,jdbcType=VARCHAR},#{readCount,jdbcType=INTEGER},#{newsTitle,jdbcType=VARCHAR},#{newsSubtitle,jdbcType=VARCHAR},#{newsType,jdbcType=VARCHAR},
+			#{newsContent,jdbcType=VARCHAR},#{verifyStatus,jdbcType=VARCHAR},#{verifytorId,jdbcType=VARCHAR},#{verifytor,jdbcType=VARCHAR},#{verifyDate,jdbcType=VARCHAR},
+			#{verifyDesc,jdbcType=VARCHAR},#{data_state,jdbcType=VARCHAR},#{created_by,jdbcType=VARCHAR},#{date_created,jdbcType=VARCHAR},#{updated_by,jdbcType=VARCHAR},
+			#{date_updated,jdbcType=VARCHAR}
+		);
+	</insert>
+	
+	<!-- 删除新闻（批量） -->
+	<delete id="deleteNews">
+		DELETE FROM sys_news 
+		WHERE hxuuid IN 
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id, jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 修改新闻 -->
+	<update id="modifyNews" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.news.NewsDTO" >
+		UPDATE sys_news
+		<set>
+			<if test="newsTitle!=null and newsTitle!='' ">
+				news_title = #{newsTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="newsSubtitle!=null and newsSubtitle!='' ">
+				news_subtitle = #{newsSubtitle,jdbcType=VARCHAR},
+			</if>
+			<if test="newsType!=null and newsType!='' ">
+				news_type = #{newsType,jdbcType=VARCHAR},
+			</if>
+			<if test="newsContent!=null and newsContent!='' ">
+				news_content = #{newsContent,jdbcType=VARCHAR},
+			</if>
+			<if test="data_state!=null and data_state!='' ">
+				data_state = #{data_state,jdbcType=VARCHAR},
+			</if>
+			<if test="updated_by!=null and updated_by!='' ">
+				updated_by = #{updated_by,jdbcType=VARCHAR},
+			</if>
+			date_updated = #{date_updated,jdbcType=VARCHAR}	
+		</set>
+		WHERE hxuuid = #{hxuuid,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 审核新闻 -->
+	<update id="updateNewsVerifyStatus" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.news.NewsDTO" >
+		UPDATE sys_news
+		<set>
+			<if test="verifyStatus!=null and verifyStatus!='' ">
+				verify_status = #{verifyStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="verifytorId!=null and verifytorId!='' ">
+				verifytor_id = #{verifytorId,jdbcType=VARCHAR},
+			</if>
+			<if test="verifytor!=null and verifytor!='' ">
+				verifytor = #{verifytor,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyDate!=null and verifyDate!='' ">
+				verify_date = #{verifyDate,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyDesc!=null and verifyDesc!='' ">
+				verify_desc = #{verifyDesc,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE hxuuid = #{hxuuid,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据id查询新闻 -->
+	<select id="queryNewsById"  resultMap="sysnews" parameterType="java.lang.String">
+		SELECT  
+			<include refid="Base_Column_List" />
+			FROM sys_news
+			<where>
+				hxuuid = #{_parameter, jdbcType=VARCHAR}
+			</where>
+	</select>
+	
+	<!-- 查询新闻列表总记录 -->
+	<select id="getNewsCount" parameterType="com.xmhx.cnlife.buzz.platform.model.manages.news.NewsDTO" resultType="INTEGER">
+		SELECT COUNT(1) FROM sys_news 
+		<where>
+			data_state = 'Y'
+			<if test="newsTitle != null and newsTitle != '' ">
+				AND news_title LIKE CONCAT('%',#{newsTitle,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="newsContent != null and newsContent != '' ">
+				AND news_content LIKE CONCAT('%',#{newsContent,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询新闻列表（分页） -->
+	<select id="getNewsList" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="sysnews">
+		SELECT * FROM sys_news 
+		<where>
+			data_state = 'Y'
+			<if test="t.newsTitle != null and t.newsTitle != '' ">
+				AND news_title LIKE CONCAT('%',#{t.newsTitle,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.newsContent != null and t.newsContent != '' ">
+				AND news_content LIKE CONCAT('%',#{t.newsContent,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.verifytor != null and t.verifytor != '' ">
+				AND verifytor LIKE CONCAT('%',#{t.verifytor,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.created_by != null and t.created_by != '' ">
+				AND created_by LIKE CONCAT('%',#{t.created_by,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.verifyStatus != null and t.verifyStatus != '' ">
+				AND verify_status = #{t.verifyStatus,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<if test="sort != null and sort != '' ">
+			ORDER BY ${sort}
+			<if test="order == 'desc' or order == 'DESC' ">
+				DESC
+			</if>
+		</if>
+			LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+	</select>
+	
+	<!-- 查询新闻列表（包含标题路径）（分页） -->
+	<select id="getNewsAndAttachList" parameterType="com.xmhx.cnlife.core.model.PageEntity" resultMap="sysnews">
+		SELECT a.*,CONCAT("/upload/",b.attach_path,"/",b.attach_name,b.attach_type) attachFullpath FROM sys_news a,sys_attach b
+		<where>
+			a.hxuuid = b.attachfk_id
+			AND a.data_state = 'Y'
+			<if test="t.newsTitle != null and t.newsTitle != '' ">
+				AND a.news_title LIKE CONCAT('%',#{t.newsTitle,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.newsContent != null and t.newsContent != '' ">
+				AND a.news_content LIKE CONCAT('%',#{t.newsContent,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.verifytor != null and t.verifytor != '' ">
+				AND a.verifytor LIKE CONCAT('%',#{t.verifytor,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.created_by != null and t.created_by != '' ">
+				AND a.created_by LIKE CONCAT('%',#{t.created_by,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="t.verifyStatus != null and t.verifyStatus != '' ">
+				AND a.verify_status = #{t.verifyStatus,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<if test="sort != null and sort != '' ">
+			ORDER BY ${sort}
+			<if test="order == 'desc' or order == 'DESC' ">
+				DESC
+			</if>
+		</if>
+			LIMIT #{beginRow,jdbcType=INTEGER},#{rows,jdbcType=INTEGER} 
+	</select>
+	
+	<!-- 前端页面上一条新闻 -->
+	<select id="queryPreviousNewsById" resultMap="sysnews" parameterType="INTEGER">
+		SELECT  
+			<include refid="Base_Column_List" />
+			FROM sys_news 
+			<![CDATA[
+			WHERE id < #{id, jdbcType=INTEGER} ORDER BY id DESC LIMIT 1
+			]]>
+	</select>
+	
+	<!-- 前端页面下一条新闻 -->
+	<select id="queryNextNewsById" resultMap="sysnews" parameterType="INTEGER">
+		SELECT  
+			<include refid="Base_Column_List" />
+			FROM sys_news 
+			<![CDATA[
+			WHERE id > #{id, jdbcType=INTEGER} ORDER BY id DESC LIMIT 1
+			]]>
+	</select>
+</mapper>

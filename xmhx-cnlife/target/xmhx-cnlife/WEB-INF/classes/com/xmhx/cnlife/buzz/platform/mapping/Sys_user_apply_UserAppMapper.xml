@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.cnlife.buzz.platform.dao.Sys_user_apply_UserAppDAO">
+	<resultMap id="sysapp" type="com.xmhx.cnlife.buzz.platform.model.webservices.SysApplyDTO">
+		<result column="hxuuid" property="hxuuid" jdbcType="VARCHAR" />
+		<result column="apply_name" property="apply_name" jdbcType="VARCHAR" />
+		<result column="apply_code" property="apply_code" jdbcType="VARCHAR" />
+		<result column="apply_icon" property="apply_icon" jdbcType="VARCHAR" />
+		<result column="apply_title" property="apply_title" jdbcType="VARCHAR" />
+		<result column="apply_desc" property="apply_desc" jdbcType="VARCHAR" />
+		<result column="apply_belong" property="apply_belong" jdbcType="VARCHAR" />
+		<result column="apply_ifprime" property="apply_ifprime" jdbcType="VARCHAR" />
+		<result column="apply_ifwap" property="apply_ifwap" jdbcType="VARCHAR" />
+		<result column="apply_url" property="apply_url" jdbcType="VARCHAR" />
+		<result column="apply_no" property="apply_no" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="VARCHAR" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+		<result column="user_mobile" property="user_mobile" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 查询用户应用列表 -->
+	<select id="querySysUserApply" parameterType="java.lang.String" resultMap="sysapp">
+		SELECT a.*,b.user_mobile FROM sys_apply a,sys_user_apply b
+		<where>
+			a.data_state = 'Y' AND a.apply_code = b.apply_code AND b.user_mobile = #{user_mobile}
+		</where>
+	</select>
+	<!-- 添加用户应用 -->
+	<insert id="addSysUserApply" parameterType="com.xmhx.cnlife.buzz.platform.model.webservices.SysUserApplyDTO" >
+		INSERT INTO sys_user_apply(hxuuid, user_mobile, apply_code, data_state, created_by,date_created, updated_by, date_updated)
+		 VALUES(#{hxuuid},#{user_mobile},#{apply_code},#{data_state},#{created_by},#{date_created},#{updated_by},#{date_updated})
+	</insert>
+	<!-- 删除用户应用 -->
+	<delete id="deleteSysUserApply" parameterType="com.xmhx.cnlife.buzz.platform.model.webservices.SysUserApplyDTO">
+		delete from sys_user_apply
+		<where>
+			user_mobile=#{user_mobile} AND apply_code=#{apply_code}
+		</where>
+	</delete>
+</mapper>

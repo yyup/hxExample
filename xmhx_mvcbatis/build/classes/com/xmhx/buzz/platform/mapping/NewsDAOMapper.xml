@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xmhx.buzz.platform.dao.NewsDao">
+	<resultMap id="BaseResultMap" type="com.xmhx.buzz.platform.model.manages.init.NewsDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="notice_id" property="notice_id" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="notice_tp" property="notice_tp" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="data_state" property="data_state" jdbcType="VARCHAR" />
+		<result column="created_by" property="created_by" jdbcType="VARCHAR" />
+		<result column="date_created" property="date_created" jdbcType="INTEGER" />
+		<result column="updated_by" property="updated_by" jdbcType="VARCHAR" />
+		<result column="date_updated" property="date_updated" jdbcType="VARCHAR" />
+		<association property="attachDTO" javaType="com.xmhx.buzz.platform.model.manages.init.AttachDTO">
+             <id property="id" column="id"/>
+             <result property="attachname" column="attachname" jdbcType="INTEGER"/>
+             <result property="attachorigname" column="attachorigname" jdbcType="VARCHAR"/>
+             <result property="attachpath" column="attachpath" jdbcType="VARCHAR"/>
+             <result property="attachtype" column="attachtype" jdbcType="VARCHAR"/>
+             <result property="attachmod" column="attachmod" jdbcType="VARCHAR"/>
+             <result property="attachfkid" column="attachfkid" jdbcType="VARCHAR"/> 
+        </association> 
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, notice_id, title, notice_tp, content, data_state, created_by, date_created, updated_by, date_updated
+	</sql>
+		
+	<select id="getNewsList" resultMap="BaseResultMap">
+		SELECT * FROM garden_base_news n LEFT JOIN xmhx_base_attach attach on n.notice_id=attach.attachfkid
+			WHERE attach.attachmod = '21' or attach.attachmod is null
+	</select>
+	<!-- 一对多 -->
+	<select id="getNewsOnetoMore" resultMap="BaseResultMap">
+		SELECT * FROM garden_base_news n LEFT JOIN xmhx_base_attach attach on n.notice_id=attach.attachfkid
+	</select>
+	<!--插入单条-->
+	<insert id="addNewsOne" parameterType="com.xmhx.buzz.platform.model.manages.init.NewsDTO">
+		INSERT INTO garden_base_news 
+			(
+			notice_id,
+			title,
+			notice_tp,
+			content,
+			data_state,
+			created_by,
+			date_created, 
+			updated_by,
+			date_updated)  values    
+	      		(#{notice_id,jdbcType=VARCHAR},
+	      		#{title,jdbcType=VARCHAR},
+	      		#{notice_tp,jdbcType=BIGINT},
+	      		#{content,jdbcType=VARCHAR},
+				'0', 
+				null, 
+				now(),
+				null,
+				now())
+	</insert>
+	<!--批量插入-->
+	<insert id="addNewsList" parameterType="java.util.List">
+		INSERT INTO garden_base_news 
+			(
+			notice_id,
+			title,
+			notice_tp,
+			content,
+			data_state,
+			created_by,
+			date_created, 
+			updated_by,
+			date_updated)  values 
+		<foreach collection="list" item="item" index="index" separator=",">      
+	      		(#{item.notice_id,jdbcType=VARCHAR},
+	      		#{item.title,jdbcType=VARCHAR},
+	      		#{item.notice_tp,jdbcType=BIGINT},
+	      		#{item.content,jdbcType=VARCHAR},
+				'0', 
+				null, 
+				now(),
+				null,
+				now())
+    	</foreach>
+	</insert>
+</mapper>
